@@ -1,0 +1,25 @@
+# x86_64 extras that on a Jetson come from JetPack or the bundled wheel:
+#   sphn      -> bundled aarch64 .so in src/pylibs on the Orin; PyPI has an x86_64 wheel
+#   tensorrt  -> JetPack on the Orin; pip wheel (bundles its own CUDA 12 libs) here
+# Keep sphn at 0.2.x: the server needs OpusStreamReader/Writer.
+sphn==0.2.1
+tensorrt-cu12==10.13.3.9
+# RunPod's images export HF_HUB_ENABLE_HF_TRANSFER=1, and huggingface_hub then REFUSES to
+# download at all unless this package is present. It is also simply faster for the ~19 GB of
+# weights, so install it rather than turning the accelerator off.
+hf_transfer==0.1.9
+# --- RAG configuration (run_x86_rag.sh): the RAG model's retrieval + STT ---
+# These three upgrade the pins in requirements.txt (transformers 4.30.2 -> 4.46.3,
+# tokenizers 0.13.3 -> 0.20.3, huggingface_hub 0.24.7 -> 0.36.2): sentence-transformers
+# 3.3.1 needs transformers >= 4.41.  The avatar's Wav2Vec2 path is unaffected
+# (Wav2Vec2FeatureExtractor / Wav2Vec2Model are stable across those versions).
+transformers==4.46.3
+tokenizers==0.20.3
+huggingface_hub==0.36.2
+sentence-transformers==3.3.1
+scikit-learn==1.6.1
+tqdm==4.68.2
+# moshi 0.2.13 is installed separately with --no-deps in setup_env_x86.sh: it
+# provides the CheckpointInfo the STT (kyutai/stt-1b-en_fr-candle) loads through.
+# --no-deps keeps it from pulling a different sphn / huggingface_hub.
+
